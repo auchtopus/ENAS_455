@@ -32,9 +32,65 @@ as desired
 
 It remains to show that this criterion is sufficient.
 
+We consider the Lyapunov function on $Y$ of:
+$$V(Y(t)) = \sum_{i=1}^N X_i(t)^2 + \sum_{i=1}^N (X_i(t) - X_i(Z^i(t)))^2$$
+Thus, we get:
+$$\begin{aligned}
+E[V(Y(t+1)) - V(Y(t)) | Y(t) = y_0] &< 0 \\
+E[\sum_{i=1}^N X_i(t+1)^2 -  X_i(t)^2 + (X_i(t+1) - X_i(Z^i(t+1)))^2 - (X_i(t) - X_i(Z^i(t)))^2] &< 0 \\
+E[\sum_{i=1}^N (X_i(t+1) +  X_i(t))(X_i(t+1) - X_i(t)) \\ 
++ (X_i(t+1) - X_i(Z^i(t+1)) + X_i(t) - X_i(Z^i(t))) \\
+(X_i(t+1) - X_i(Z^i(t+1)) - X_i(t) + X_i(Z^i(t)))] &< 0 \\
+\end{aligned}$$
+
+Observe that $X_{I(t+1)}(Z^{I(t+1)}(t+1)) = X_{I(t+1)}(t+1)$. This is the only queue for which we can guarantee this equality. Thus, for every other queue, $X_(Z^i(t+1)) = X_i(Z^i(t))$, so we can rewrite the LHS as:
+$$\begin{aligned}E[ (X_{I(t+1)}(t+1) +  X_{I(t+1)}(t))(X_{I(t+1)}(t+1) - X_{I(t+1)}(t)) \\ 
++ (X_{I(t+1)}(t) - X_{I(t+1)}(Z^{I(t+1)}(t)))(-X_{I(t+1)}(t) + X_{I(t+1)}(Z^{I(t+1)}(t)))\\
++ 
+\sum_{i=1, i \neq I(t+1)}^N (X_i(t+1) +  X_i(t))(X_i(t+1) - X_i(t)) \\ 
++ (X_i(t+1) + X_i(t) - 2X_i(Z^i(t)))
+(X_i(t+1)  - X_i(t) )]&< 0 \\
+\end{aligned}$$
 
 
-Lyapunov function: $$X(t)^2 + [X(t) - X(Z(t))]^2$$ has negative drift under the necessary conditions.
+We observe that we may return the first term of the $I(t+1)$ queue back into the summation to obtain:
+
+$$\begin{aligned}E[
+(X_{I(t+1)}(t) - X_{I(t+1)}(Z^{I(t+1)}(t)))(-X_{I(t+1)}(t) + X_{I(t+1)}(Z^{I(t+1)}(t)))\\
++ 
+\sum_{i=1}^N (X_i(t+1) +  X_i(t))(X_i(t+1) - X_i(t)) \\ 
++ \sum_{i=1, i \neq I(t+1)}^N
+(X_i(t+1) + X_i(t) - 2X_i(Z^i(t)))
+(X_i(t+1)  - X_i(t) )]&< 0 \\
+\end{aligned}$$
+
+
+Moreover, we know that $X_i(t+1) - X_i(t) = \max(0, - M_i(t))$ if $i \neq R(t)$. These are the queues that were not selected by $R(t)$ to be appended to. 
+On the other hand, $X_{R(t)}(t+1) - X_{R(t)}(t) = A(t) - M_{R(t)}(t)$. Attempting to make these substitutions poses a problem in that it's possible for $I(t+1) = R(t)$. We thus have two cases:
+
+
+### Case 1: $I(t+1) = R(t)$
+
+
+Making these substitutions, we get:
+$$\begin{aligned}
+ E[ (X_{I(t+1)}(t) - X_{I(t+1)}(Z^{I(t+1)}(t)))(-X_{I(t+1)}(t) + X_{I(t+1)}(Z^{I(t+1)}(t)))\\
++ 
+\sum_{i=1, i \neq I(t+1)}^N (2 X_i(t) - M_i(t))(-M_{i}(t)) \\ 
++ \sum_{i=1, i \neq I(t+1)}^N  (2 X_i(t) - M_i(t) - 2X_i(Z^i(t)))(-M_{i}(t) )]&< 0 \\
+\end{aligned}$$
 
 
 
+### Case 2: $I(t+1) \neq R(t)$
+
+
+Making these substitutions, we get:
+$$\begin{aligned}
+ E[ (X_{I(t+1)}(t) - X_{I(t+1)}(Z^{I(t+1)}(t)))(-X_{I(t+1)}(t) + X_{I(t+1)}(Z^{I(t+1)}(t)))\\
++ 
+\sum_{i=1, i \neq I(t+1), i \neq R(t)}^N (2 X_i(t) - M_i(t))(-M_{i}(t)) \\ 
++ \sum_{i=1, i \neq I(t+1), i \neq R(t)}^N  (2 X_i(t) - M_i(t) - 2X_i(Z^i(t)))(-M_{i}(t) ) \\ 
++ (2 X_{R(t)}(t) - M_{R(t)}(t) + A(t))(-M_{R(t)}(t)) \\
++ (2 X_{R(t)}(t) - M_{R(t)}(t) - 2X_{R(t)}(Z^{R(t)}(t)) + A(t))(-M_{R(t)}(t) )] &< 0
+\end{aligned}$$
