@@ -1,0 +1,40 @@
+## Problem 1
+
+We observe that $R(t)$ depends on the value of $Z(t)$, which in turn depends upon previous values of $X_n(t)$ for all $n$. The specific dependency is a function of the sampling function $I(t)$. Thus, we may observe that while $X(t)$ is not a markov process, $Y(t) = (X(t), X(Z(t)))$. 
+
+If we let $X(t) = (x_1, x_2, ..., x_n)$ and $M(t) = (M_1(t), M_2(t), ... M_n(t))$, we can similarly let $A(t) = (A_1(t), A_2(t)...A_n(t))$. With this, $A(t)$ is a matrix with all zeros except for a one at index $R_n(t)$ which is the index of the smallest queue, which is also $\argmin_n(X_n(Z^n(t))$
+$$Y(t+1) = ((X(t) - M(t) + A_n(t), X(Z(t+1))) = ((X(t) - M(t) + A_n(t), X(Z(t+1)))$$
+
+In scenario $A$, we may compute $X(Z(t+1)) = X_1(Z^1(t)), X_2(Z^3(t)) ... X_{(t \pmod{N} + 1)}(t) ... X_N(Z^n(t))$, which is to say that we can only update queue $t \pmod{N} + 1$ with the actual queue length. Thus, 
+$$R(t+1) = \begin{cases}
+R(t)  & X_{R(t)}(t) < X_{(t \pmod{N} + 1)}(t)\\
+t \pmod{N} + 1 &  X_{R(t)}(t) \geq X_{(t \pmod{N} + 1)}(t)
+\end{cases}$$
+Let queue $n$ spend $k_n$ time steps being the shortest sampled queue.Thus, on average, it is receiving reqeusts for $k_n$ time steps, so will  expect to append $ak_n$ new elements every $N$ time steps and then expect to process $Nm_n$ of them every $N$ time steps. The system will be stable if $aE[k] < Nm_n$ for every $n$. 
+
+$R(t)$ will only equal a certain queue for a finite period of time, before the next sampled queue has had sufficiently long enough to 
+If $m_n$ is higher, intuitively, $k_n$ will also be larger, but only to a certain point, because $\sum_{n=1}^N E[k_n] = N$  while $m_n$ can be unbounded. Suppose that the distribution of $M$ is very skewed, and one $m_i$ dominates every other $m$. While $m_i$ may be larger, it will thus process it's queue faster, but as a consequence, will also receive correspondingly more packets to process, meaning that on net, it should equilibriate.
+
+While I don't have a good way to solve for $k$, I do believe that it will even out to where the criterion is $a < \sum_{i=1}^n m_n$. 
+
+We can show that this is necessary by using the Lyapunov function on $Y$ of 
+$$V(Y(t)) = \sum_{i=1}^n X_i(t)$$
+
+We want to compute 
+$$\begin{aligned}
+E[V(Y(t+1)) - V(Y(t)) | Y(t) = y_0] &< 0 \\
+E[[\sum_{n=1}^N X_n(t) - \sum_{n=1}^N M_n(t)]^+ +\sum_{n=1}^N A_n(t)] - \sum_{n=1}^N X_n(t) &< 0 \\
+E[\sum_{n=1}^N A_n(t) - \sum_{n=1}^N M_n(t)] &< 0 \\
+a_n - \sum_{n=1}^N m_n(t) &< 0 \\ 
+a_n &< \sum_{n=1}^N m_n(t)
+\end{aligned}$$
+as desired
+
+It remains to show that this criterion is sufficient.
+
+
+
+Lyapunov function: $$X(t)^2 + [X(t) - X(Z(t))]^2$$ has negative drift under the necessary conditions.
+
+
+
